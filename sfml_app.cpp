@@ -10,12 +10,10 @@ int main()
     while (game.running())
     {
         //Update
+        game.update();
         //Render
-        window.clear(); //clear old frame
-        window.display(); //tell aoo that window is done drawing
-
-
-
-        return 0;
+        game.render();
+        
     }
+    return 0;
 }

@@ -16,18 +16,24 @@ public:
 	//Accessors
 	const bool running() const;
 
-	//Fucntions
+	//Functions
 	void update();
 	void render();
 	void pollEvents();
+
 private:
+
 	//Functions
 	void initVariables();
 	void initWindow();
+	void initEnemies();
+
 	//Window
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::VideoMode videoMode;
-	//Variables
+
+	//Game objects
+	sf::RectangleShape enemy;
 };
 
