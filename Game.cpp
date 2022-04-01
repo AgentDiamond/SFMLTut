@@ -20,6 +20,8 @@ const bool Game::running() const
 void Game::update()
 {
     this->pollEvents();
+    this->updateMousePositions();
+    this->updateEnemies();
 }
 
 /*
@@ -33,8 +35,9 @@ void Game::render()
 {
     this->window->clear();
 
+
     //Draw game objects
-    this->window->draw(this->enemy);
+    this->renderEnemies();
     this->window->display();
 }
 
@@ -58,6 +61,12 @@ void Game::pollEvents()
 void Game::initVariables()
 {
 	this->window = nullptr;
+
+    //Game logic
+    this->points = 0;
+    this->enemySpawnTimerMax = 60.f;
+    this->enemySpawnTimer = enemySpawnTimerMax;
+    this->maxEnemies = 5;
 }
 
 void Game::initWindow()
@@ -66,7 +75,7 @@ void Game::initWindow()
 	this->videoMode.width = 800;
 	this->window = new sf::RenderWindow(this->videoMode, "My First Game", sf::Style::Titlebar | sf::Style::Close);
 
-    this->window->setFramerateLimit(144);
+    this->window->setFramerateLimit(60);
 
 }
 
@@ -78,4 +87,68 @@ void Game::initEnemies()
     this->enemy.setFillColor(sf::Color::Cyan);
     this->enemy.setOutlineColor(sf::Color::Green);
     this->enemy.setOutlineThickness(1.f);
+}
+
+/// <summary>
+/// Updates the mouse position relative to the window
+/// </summary>
+void Game::updateMousePositions()
+{
+    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+}
+/// <summary>
+/// Updates the enemy spawn timer and spawns enemies
+/// when the total amount of enemies is smaller than the maximum.
+/// 
+/// Moves the enemies downwards.
+/// 
+/// Removes the enemies at the edge of the screen.
+/// </summary>
+void Game::updateEnemies()
+{
+    //updating the timer for enemy spawning
+    if (this->enemySpawnTimer < this->enemySpawnTimerMax)
+    {
+
+        this->enemySpawnTimer += 1.f;
+        
+    }
+    else if (this->enemySpawnTimer >= this->enemySpawnTimerMax)
+    {
+        //spawn the enemy and reset the timer
+        this->spawnEnemy();
+        this->enemySpawnTimer = 0.f;
+    }
+
+    //Move the enemies
+    for (auto& e : this->enemies)
+    {
+        e.move(0.f, 5.f);
+    }
+}
+void Game::renderEnemies()
+{
+    for (auto& e : this->enemies)
+    {
+        this->window->draw(e);
+    }
+}
+/// <summary>
+/// Spawns enemies and sets their colours and positions
+/// -Sets a random position.
+/// -Sets a random colour.
+/// -Adds enemy to vector
+/// </summary>
+void Game::spawnEnemy()
+{
+    this->enemy.setPosition(
+        static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - this->enemy.getSize().x)),
+        0.f
+    );
+
+    this-> enemy.setFillColor(sf::Color::Green);
+
+    this->enemies.push_back(this->enemy);
+
+
 }
