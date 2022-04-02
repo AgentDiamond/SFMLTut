@@ -38,3 +38,5 @@ include/
 imgui-sfml-master
 imgui-master
 Debug
+.vs
+
