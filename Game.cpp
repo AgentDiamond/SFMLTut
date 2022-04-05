@@ -4,6 +4,8 @@ Game::Game()
 {
 	this->initVariables();
 	this->initWindow();
+    this->initFonts();
+    this->initText();
     this->initEnemies();
 }
 
@@ -21,9 +23,10 @@ const bool Game::running() const
 void Game::update()
 {
     this->pollEvents();
-    if (endGame == false)
+    if (gameEnded == false)
     {
         this->updateMousePositions();
+        this->updateText();
         this->updateEnemies();
 
 
@@ -53,7 +56,8 @@ void Game::render()
 
 
     //Draw game objects
-    this->renderEnemies();
+    this->renderEnemies(*this->window);
+    this->renderText(*this->window);
     this->window->display();
 }
 
@@ -99,6 +103,19 @@ void Game::initWindow()
 
 }
 
+void Game::initFonts()
+{
+    this->font.loadFromFile("Fonts/ARCADE.ttf");
+}
+
+void Game::initText()
+{
+    this->uiText.setFont(this->font);
+    this->uiText.setCharacterSize(50);
+    this->uiText.setFillColor(sf::Color::White);
+    this->uiText.setString("DEFAULT");
+}
+
 void Game::initEnemies()
 {
     this->enemy.setPosition(10.f, 10.f);
@@ -107,6 +124,16 @@ void Game::initEnemies()
     this->enemy.setFillColor(sf::Color::Cyan);
     this->enemy.setOutlineColor(sf::Color::Green);
     this->enemy.setOutlineThickness(1.f);
+}
+
+void Game::updateText()
+{
+    std::stringstream ss;
+    ss << "Points: " << this->points << std::endl
+        << "Health: " << this->health << std::endl;
+    this->uiText.setString(ss.str());
+
+
 }
 
 /// <summary>
@@ -190,13 +217,18 @@ void Game::updateEnemies()
         }
   
 }
-void Game::renderEnemies()
+void Game::renderText(sf::RenderTarget& target)
+{
+    target.draw(this->uiText);
+}
+void Game::renderEnemies(sf::RenderTarget& target)
 {
     for (auto& e : this->enemies)
     {
-        this->window->draw(e);
+        target.draw(e);
     }
 }
+
 /// <summary>
 /// Spawns enemies and sets their colours and positions
 /// -Sets a random position.

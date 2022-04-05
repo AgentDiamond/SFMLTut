@@ -8,6 +8,7 @@
 #include <vector>
 #include <ctime>
 #include <iostream>
+#include <sstream>
 
 //Class that acts as the game engine. Wrapper class
 class Game
@@ -30,10 +31,17 @@ private:
 	//Functions
 	void initVariables();
 	void initWindow();
+	void initFonts();
+	void initText();
 	void initEnemies();
+
+	void updateText();
 	void updateMousePositions();
 	void updateEnemies();
-	void renderEnemies();
+
+	void renderText(sf::RenderTarget& target);
+	void renderEnemies(sf::RenderTarget& target);
+
 	void spawnEnemy();
 
 	//State Functions
@@ -44,6 +52,12 @@ private:
 	//Game State
 	bool gamePaused;
 	bool gameEnded;
+
+	//Resources
+	sf::Font font;
+
+	//Text
+	sf::Text uiText;
 
 	//Window
 	sf::RenderWindow* window;
