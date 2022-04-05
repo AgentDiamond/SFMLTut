@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <ctime>
+#include <iostream>
 
 //Class that acts as the game engine. Wrapper class
 class Game
@@ -35,16 +36,29 @@ private:
 	void renderEnemies();
 	void spawnEnemy();
 
+	//State Functions
+
+	void pauseGame();
+	void endGame();
+
+	//Game State
+	bool gamePaused;
+	bool gameEnded;
+
 	//Window
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::VideoMode videoMode;
 
 	//Game logic
-	int points;
+	unsigned int points;
+	int health;
 	float enemySpawnTimer;
 	float enemySpawnTimerMax;
 	int maxEnemies;
+	bool mouseHeld;
+
+
 
 	//Game objects
 	sf::RectangleShape enemy;
@@ -52,5 +66,6 @@ private:
 
 	//Mouse Positions
 	sf::Vector2i mousePosWindow;
+	sf::Vector2f mousePosView;
 };
 
