@@ -19,6 +19,12 @@ const bool Game::running() const
 	return this->window->isOpen();
 }
 
+const bool Game::getEndGame() const
+{
+    return this->gameEnded;
+}
+
+
 
 void Game::update()
 {
@@ -33,7 +39,9 @@ void Game::update()
     }
     else if (this->gameEnded == true)
     {
+        //TODO - make end screen work
         std::cout << "You died! Game over..." << std::endl;
+        !running();
     }
 
     //endgame condition
@@ -84,7 +92,7 @@ void Game::initVariables()
 
     //Game logic
     this->points = 0;
-    this->health = 100;
+    this->health = 10;
     this->enemySpawnTimerMax = 60.f;
     this->enemySpawnTimer = enemySpawnTimerMax;
     this->maxEnemies = 5;
@@ -95,8 +103,8 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
-	this->videoMode.height = 600;
-	this->videoMode.width = 800;
+    this->videoMode.height = 600;
+    this->videoMode.width = 800;
 	this->window = new sf::RenderWindow(this->videoMode, "My First Game", sf::Style::Titlebar | sf::Style::Close);
 
     this->window->setFramerateLimit(60);
@@ -110,10 +118,19 @@ void Game::initFonts()
 
 void Game::initText()
 {
+    //ui text
     this->uiText.setFont(this->font);
     this->uiText.setCharacterSize(50);
     this->uiText.setFillColor(sf::Color::White);
     this->uiText.setString("DEFAULT");
+
+    //endgame text
+    this->endGameText.setFont(this->font);
+    this->endGameText.setOrigin(endGameText.getLocalBounds().width/2, endGameText.getLocalBounds().height/2);
+    this->endGameText.setPosition(this->videoMode.width/2.f, this->videoMode.height/2.f);
+    this->endGameText.setCharacterSize(50);
+    this->endGameText.setFillColor(sf::Color::White);
+    this->endGameText.setString("DEFAULT");
 }
 
 void Game::initEnemies()
@@ -134,6 +151,13 @@ void Game::updateText()
     this->uiText.setString(ss.str());
 
 
+}
+
+void Game::updateEndGameText()
+{
+    std::stringstream ss;
+    ss << "Oh no, you died!" << std::endl;
+    this->endGameText.setString(ss.str());
 }
 
 /// <summary>
@@ -221,6 +245,11 @@ void Game::renderText(sf::RenderTarget& target)
 {
     target.draw(this->uiText);
 }
+void Game::renderEndGameText(sf::RenderTarget& target)
+{
+    target.clear();
+    target.draw(this->endGameText);
+}
 void Game::renderEnemies(sf::RenderTarget& target)
 {
     for (auto& e : this->enemies)
@@ -252,9 +281,11 @@ void Game::spawnEnemy()
 void Game::pauseGame()
 {
     this->gamePaused = true;
+    //TODO - get pause text and pause key to work
 }
 
 void Game::endGame()
 {
     this->gameEnded = true;
+    renderEndGameText(*this->window);
 }

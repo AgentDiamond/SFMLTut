@@ -20,6 +20,7 @@ public:
 
 	//Accessors
 	const bool running() const;
+	const bool getEndGame() const;
 
 	//Functions
 	void update();
@@ -36,10 +37,12 @@ private:
 	void initEnemies();
 
 	void updateText();
+	void updateEndGameText();
 	void updateMousePositions();
 	void updateEnemies();
 
 	void renderText(sf::RenderTarget& target);
+	void renderEndGameText(sf::RenderTarget& target);
 	void renderEnemies(sf::RenderTarget& target);
 
 	void spawnEnemy();
@@ -58,11 +61,13 @@ private:
 
 	//Text
 	sf::Text uiText;
+	sf::Text endGameText;
 
 	//Window
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::VideoMode videoMode;
+
 
 	//Game logic
 	unsigned int points;
